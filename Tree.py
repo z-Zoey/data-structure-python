@@ -1,4 +1,7 @@
 # Tree implementation through OOP
+import collections
+
+
 class BinaryTree(object):
 
     def __init__(self, rootObj):
@@ -334,3 +337,61 @@ def validate_BST_recursion(node, min=float('-inf'), max=float('inf')):
         return True
     else:
         return False
+
+
+# Print tree by level order with each level on new line O(n)
+def levelOrderPrint(tree):
+
+    if not tree:
+        return
+
+    nodes = collections.deque([tree])
+    currentCount = 1
+    nextCount = 0
+    line = ''
+
+    while len(nodes) != 0:
+
+        currentNode = nodes.popleft()
+        currentCount -= 1
+
+        line += f'{currentNode.value} '
+
+        if currentNode.left:
+            nodes.append(currentNode.left)
+            nextCount += 1
+
+        if currentNode.right:
+            nodes.append(currentNode.right)
+            nextCount += 1
+
+        if currentCount == 0:
+            print(f'{line}')
+            line = ''
+            currentCount, nextCount = nextCount, currentCount
+
+
+# Trim a BST so that each node value is betweem min and max O(n)
+def trim_BST(tree, minVal, maxVal):
+
+    if not tree:
+        return False
+
+    tree.left = trim_BST(tree.left, minVal, maxVal)
+    tree.right = trim_BST(tree.right, minVal, maxVal)
+
+    if minVal <= tree.value <= maxVal:
+        return tree
+    if tree.value < minVal:
+        return tree.right
+    if tree.value > maxVal:
+        return tree.left
+
+
+tree = Node(5)
+tree.left = Node(3)
+tree.left.left = Node(1)
+tree.left.right = Node(4)
+tree.right = Node(8)
+tree.right.left = Node(6)
+tree.right.right = Node(10)
